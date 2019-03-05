@@ -64,7 +64,11 @@ namespace MyGame
             foreach (Asteroid a in _asteroids)
             {
                 a.Update();
-                if (a.Collision(_bullet)) { System.Media.SystemSounds.Hand.Play(); }
+                if (a.Collision(_bullet))
+                {
+                    System.Media.SystemSounds.Hand.Play();
+                    a.Respawn();
+                }
             }
             _bullet.Update();
             _planet1.Update();
@@ -87,7 +91,7 @@ namespace MyGame
             _planet1 = new Planet1(new Point(1000, rnd.Next(0, Game.Height)), new Point(-z, z), new Size(20, 20));
             _planet2 = new Planet2(new Point(1000, rnd.Next(0, Game.Height)), new Point(-u /2, u ), new Size(50, 50));
             _bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
-            _asteroids = new Asteroid[15];            
+            _asteroids = new Asteroid[150];            
 
             for (var i = 0; i < _objs.Length; i++)
             {
