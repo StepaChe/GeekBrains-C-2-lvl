@@ -49,28 +49,57 @@ namespace MyGame
             Buffer.Graphics.Clear(Color.Black);
             foreach (BaseObject obj in _objs)
                 obj.Draw();
+            foreach (Asteroid obj in _asteroids)
+                obj.Draw();
+            _planet1.Draw();
+            _bullet.Draw();
+            _planet2.Draw();
             Buffer.Render();
         }
 
         public static void Update()
         {
             foreach (BaseObject obj in _objs)
-                obj.Update();
+                obj.Update();            
+            foreach (Asteroid a in _asteroids)
+            {
+                a.Update();
+                if (a.Collision(_bullet)) { System.Media.SystemSounds.Hand.Play(); }
+            }
+            _bullet.Update();
+            _planet1.Update();
+            _planet2.Update();
         }
 
+
         public static BaseObject[] _objs;
+        private static Planet1 _planet1;
+        private static Planet2 _planet2;
+        private static Bullet _bullet;
+        private static Asteroid[] _asteroids;
 
         public static void Load()
         {
+            var rnd = new Random();
+            int z = rnd.Next(5, 50);
+            int u = rnd.Next(5, 50);
             _objs = new BaseObject[30];
-            for (int i = _objs.Length /2; i < _objs.Length ; i++)
-                _objs[i] = new BaseObject(new Point(600, i * 20), new Point(-i, -i), new Size(10, 10));
-            for (int i = 0; i < _objs.Length / 2; i++)
-                _objs[i] = new Star(new Point(600, i * 38), new Point(-i, 0), new Size(5, 5));
-            for (int i = _objs.Length - 1; i < _objs.Length; i++)
-                _objs[i] = new BigStar(new Point(600, i * 2), new Point(-i, -i), new Size(20, 20));
-            //for (int i = _objs.Length - 1; i < _objs.Length; i++)
-            //    _objs[i] = new Planet(new Point(600, i * 1), new Point(-i, -2), new Size(20, 20));
+            _planet1 = new Planet1(new Point(1000, rnd.Next(0, Game.Height)), new Point(-z, z), new Size(20, 20));
+            _planet2 = new Planet2(new Point(1000, rnd.Next(0, Game.Height)), new Point(-u /2, u ), new Size(50, 50));
+            _bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
+            _asteroids = new Asteroid[15];            
+
+            for (var i = 0; i < _objs.Length; i++)
+            {
+                int r = rnd.Next(5, 50);
+                _objs[i] = new Star(new Point(1000, rnd.Next(0, Game.Height)), new Point(-r / 2, r), new Size(3, 3));
+            }
+
+            for (var i = 0; i < _asteroids.Length; i++)
+            {
+                int r = rnd.Next(5, 50);
+                _asteroids[i] = new Asteroid(new Point(1000, rnd.Next(0, Game.Height)), new Point(-r /5, r), new Size(10, 10));
+            }
         }
     }
 }
